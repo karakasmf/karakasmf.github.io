@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YourName</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">YourName</a>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="#research">Research</a>
+                    <ul class="dropdown">
+                        <li><a href="#Research">Research Focus</a></li>
+                        <li><a href="#publications">Recent Publications</a></li>
+                    </ul>
+                </li>
+                <li><a href="curriculum_vitae.html">Brief CV</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-text" data-aos="fade-right">
+                    <h1>Your Name</h1>
+                    <h2>Your Title</h2> 
+                    <h3>Organization</h3>
+                    <p>CatchPhrase</p>
+                    <a href="#contact" class="cv-button">Get in Touch</a>
+                </div>
+                <div class="profile-image-container" data-aos="fade-left">
+                    <img src="#yourimgfile" alt="descriptor" class="profile-image">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="research">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Research Focus</h2>
+            <div class="research-grid">
+                <div class="research-item" data-aos="fade-up" data-aos-delay="100">
+                    <h3>Focus 1</h3>
+                    <p>description</p>
+                </div>
+                <div class="research-item" data-aos="fade-up" data-aos-delay="200">
+                    <h3>Focus 2</h3>
+                    <p>description</p>
+                </div>
+                <div class="research-item" data-aos="fade-up" data-aos-delay="300">
+                    <h3>Focus 3</h3>
+                    <p>description</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="publications">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Recent Publications</h2>
+            <div class="scholar-stats">
+                <div class="stat-box">
+                    <h3>Citations</h3>
+                    <b><p id="citation-count">Loading...</p></b>
+                </div>
+                <div class="stat-box">
+                    <h3>Publications</h3>
+                    <b><p id="publication-count">Loading...</p></b>
+                </div>
+                <div class="stat-box">
+                    <h3>H-Index</h3>
+                    <b><p id="h-index">Loading...</p></b>
+                </div>
+                <p class="update-time">Data sourced from Google Scholar. Last updated: <span id="last-updated">Loading...</span></p>
+            </div>
+            <div class="publication-list" id="recent-publications">
+                <!-- Publications will be inserted here by JavaScript -->
+            </div>
+            </div>
+            <center><a href="yourgooglescholarlink" class="cv-button" target="_blank">Google Scholar</a>
+                <a href="curriculum_vitae.html" class="cv-button">All Publications</a></center>
+           
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Let's Connect</h2>
+            <div class="contact-grid">
+                <div class="contact-info" data-aos="fade-right">
+                    <h3>Get in Touch</h3>
+                    <p>description</p>
+                    <div class="contact-links">
+                        <a href="linkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="github" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="mailto:email" target="_blank"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="js/main.js"></script>
+
+
+
+
+
+<script>
+    async function updateScholarStats() {
+        try {
+            console.log('Attempting to fetch scholar stats...');
+            const response = await fetch('/assets/data/scholar_stats.json');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Fetched scholar stats:', data);
+            
+            // Update your HTML elements
+            document.getElementById('citation-count').textContent = data.citations;
+            document.getElementById('publication-count').textContent = data.publications;
+            document.getElementById('h-index').textContent = data.h_index;
+            document.getElementById('last-updated').textContent = data.last_updated;
+            
+            console.log('Updated DOM elements successfully');
+        } catch (error) {
+            console.error('Error fetching scholar stats:', error);
+        }
+    }
+    
+    // Call when page loads
+    document.addEventListener('DOMContentLoaded', updateScholarStats);
+    </script>
+</body>
+</html>
