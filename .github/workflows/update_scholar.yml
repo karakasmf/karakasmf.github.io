@@ -33,7 +33,7 @@ jobs:
         env:
           SCHOLAR_ID: ${{ secrets.SCHOLAR_ID }}   # Settings → Secrets and variables → Actions
         run: |
-          python tools/scholar_pull.py \
+          python tools/update_scholar.py \
             --max 150 \
             --out assets/data/scholar_stats.json \
             --quiet
