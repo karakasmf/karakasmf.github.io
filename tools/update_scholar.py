@@ -5,9 +5,10 @@ import os
 import sys
 
 def update_scholar_stats():
-  try:
-      author = scholarly.search_author_id('YourGoogleScholarID-To retrieve, go to page and its between the = and & signs in the URL')
-      author = scholarly.fill(author)
+      scholar_id = os.environ.get("SCHOLAR_ID")
+# Scholar profilini çek
+author = scholarly.search_author_id(scholar_id)
+author = scholarly.fill(author)
       
       stats = {
           'citations': author['citedby'],
