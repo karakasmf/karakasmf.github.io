@@ -1,31 +1,52 @@
-name: Update Scholar Stats
+name: Update Google Scholar Publications
+
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1"  # Her Pazartesi 08:17 (Europe/Istanbul ≈ UTC+3)
 
 jobs:
   update-stats:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
-      - uses: actions/checkout@v2
-      
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
-          
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Ensure folders exist
+        run: |
+          mkdir -p tools assets/data
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install scholarly
-          
+          pip install scholarly==1.7.11
+
       - name: Run scholar script
-        run: python .github/scripts/update_scholar.py
-        
+        env:
+          SCHOLAR_ID: ${{ secrets.SCHOLAR_ID }}   # Settings → Secrets and variables → Actions
+        run: |
+          python tools/scholar_pull.py \
+            --max 150 \
+            --out assets/data/scholar_stats.json \
+            --quiet
+
       - name: Commit and push if changed
         run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update scholar stats" && git push)
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add assets/data/scholar_stats.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update publications from Google Scholar [skip ci]"
+            git push
+          else
+            echo "No changes."
+          fi
