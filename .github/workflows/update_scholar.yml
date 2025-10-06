@@ -3,7 +3,7 @@ name: Update Google Scholar Publications
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 5 * * 1"  # Her Pazartesi 08:17 (Europe/Istanbul ≈ UTC+3)
+    - cron: "0 5 * * 1"  # Her Pazartesi 08:00 (Europe/Istanbul ≈ UTC+3)
 
 jobs:
   update-stats:
