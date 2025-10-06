@@ -6,7 +6,7 @@ import sys
 
 def update_scholar_stats():
   try:
-      author = scholarly.search_author_id('YourGoogleScholarID-To retrieve, go to page and its between the = and & signs in the URL')
+      author = scholarly.search_author_id('GMQ2DnkAAAAJ')
       author = scholarly.fill(author)
       
       stats = {
