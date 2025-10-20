@@ -1,8 +1,8 @@
 {
-  "citations": 26,
+  "citations": 27,
   "h_index": 3,
   "publications": 9,
-  "last_updated": "2025-10-13 09:54:04",
+  "last_updated": "2025-10-20 06:17:58",
   "recent_publications": [
     {
       "title": "METAHEURISTIC-DRIVEN MULTI OBJECTIVE FIR FILTER DESIGN FOR ECG DENOISING",
@@ -72,7 +72,7 @@
       "title": "Finite Impulse Response Filter Design Using Squirrel Search Algorithm Sincap Arama Algoritmasi Kullanarak Sonlu Dürtü Yanitli Filtre Tasarimi",
       "year": "Year Unknown",
       "citation": "",
-      "abstract": "Finite Impulse Response Filter Design Using Squirrel Search Algorithm Sincap Arama \nAlgoritmasi Kullanarak Sonlu Dürtü Yanitli Filtre Tasarimi | AVESİS Erciyes Üniversitesi \nAkademik Veri Yönetim Sistemi Araştırmacı Girişi English Detaylı Arama Ana Sayfa Son Eklenen \nYayınlar Finite Impulse Response Filter Design Us... Finite Impulse Response Filter Design \nUsing Squirrel Search Algorithm Sincap Arama Algoritmasi Kullanarak Sonlu Dürtü Yanitli Filtre \nTasarimi Atıf İçin Kopyala KARAKAŞ MF, LATİFOĞLU F. 2020 Medical Technologies Congress, \nTIPTEKNO 2020, Antalya, Türkiye, 19 - 20 Kasım 2020, (Tam Metin Bildiri) identifier Yayın Türü: \nBildiri / Tam Metin Bildiri Cilt numarası: Doi Numarası: 10.1109/tiptekno50054.2020.9299250 \nBasıldığı Şehir: Antalya Basıldığı Ülke: Türkiye Erciyes Üniversitesi Adresli: Evet Özet \n© 2020 IEEE.The Squirrel Search Algorithm, one of the newly introduced metaheuristic …",
+      "abstract": "Finite Impulse Response Filter Design Using Squirrel Search Algorithm Sincap Arama \nAlgoritmasi Kullanarak Sonlu Dürtü Yanitli Filtre Tasarimi | AVESİS Erciyes Üniversitesi \nAkademik Veri Yönetim Sistemi Araştırmacı Girişi English Detaylı Arama Ana Sayfa Son Eklenen \nYayınlar Finite Impulse Response Filter Design Us... Finite Impulse Response Filter Design \nUsing Squirrel Search Algorithm Sincap Arama Algoritmasi Kullanarak Sonlu Dürtü Yanitli Filtre \nTasarimi KARAKAŞ MF, LATİFOĞLU F. 2020 Medical Technologies Congress, TIPTEKNO \n2020, Antalya, Türkiye, 19 - 20 Kasım 2020, (Tam Metin Bildiri) identifier Yayın Türü: Bildiri / \nTam Metin Bildiri Cilt numarası: Doi Numarası: 10.1109/tiptekno50054.2020.9299250 Basıldığı \nŞehir: Antalya Basıldığı Ülke: Türkiye Erciyes Üniversitesi Adresli: Evet Özet © 2020 IEEE.The \nSquirrel Search Algorithm, one of the newly introduced metaheuristic algorithm, has been …",
       "url": "https://avesis.erciyes.edu.tr/yayin/960389cb-c61e-498c-9836-c826fb631446/finite-impulse-response-filter-design-using-squirrel-search-algorithm-sincap-arama-algoritmasi-kullanarak-sonlu-durtu-yanitli-filtre-tasarimi",
       "authors": "MEHMET KARAKAŞ and FATMA LATİFOĞLU"
     }
