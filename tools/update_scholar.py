@@ -79,7 +79,7 @@ def main():
                 "title": bib.get("title", "N/A"),
                 "year": bib.get("pub_year", "Year Unknown"),
                 "citation": bib.get("citation", "Citation not available"),
-                "citations_count": fp.get("num_citations', 0) if False else fp.get("num_citations", 0),
+                "citations_count": fp.get("num_citations", 0),
                 "abstract": abstract,
                 "url": _extract_url(fp),
                 "authors": bib.get("author", []),
