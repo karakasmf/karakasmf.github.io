@@ -1,263 +1,224 @@
-// Initialize AOS (Animate On Scroll)
-AOS.init({
-    duration: 800,
-    once: true,
-    offset: 100
-});
+// === AOS ===
+AOS.init({ duration: 800, once: true, offset: 100 });
 
-// Navbar scroll effect
-window.addEventListener('scroll', function() {
-    if (window.scrollY > 50) {
-        document.getElementById('navbar').classList.add('scrolled');
-    } else {
-        document.getElementById('navbar').classList.remove('scrolled');
-    }
-});
+// === Tek scroll handler + rAF + passive ===
+(() => {
+  const navbar = document.getElementById('navbar');
+  const header = document.querySelector('header');
+  const headerContent = document.querySelector('.header-content');
+  const profileImage = document.querySelector('.profile-image-container');
+  const researchSection = document.querySelector('#research');
 
-// Optional: Parallax effect for header
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const header = document.querySelector('header');
-    if (header) {
-        header.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
+  const sections = Array.from(document.querySelectorAll('section'));
+  const navLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+  const NAV_OFFSET = 100;
 
-// Add active state to navigation links based on scroll position
-window.addEventListener('scroll', function() {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    
+  let ticking = false;
+
+  function onScrollFrame() {
+    const y = window.scrollY || 0;
+
+    // Navbar scrolled
+    if (navbar) navbar.classList.toggle('scrolled', y > 50);
+
+    // Parallax
+    if (header) header.style.transform = `translate3d(0, ${y * 0.5}px, 0)`;
+
+    // Aktif link
     let current = '';
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Fade effect for header and profile image
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('header');
-    const profileImage = document.querySelector('.profile-image-container');
-    const headerContent = document.querySelector('.header-content');
-    const researchSection = document.querySelector('#research');
-    
-    if (researchSection) {
-        const researchPosition = researchSection.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        
-        if (researchPosition < windowHeight) {
-            const opacity = Math.max(0, Math.min(1, researchPosition / windowHeight));
-            headerContent.style.opacity = opacity;
-            profileImage.style.opacity = opacity;
-            headerContent.style.transform = `translateY(${(1 - opacity) * -50}px)`;
-            profileImage.style.transform = `translateY(${(1 - opacity) * -50}px)`;
-        } else {
-            headerContent.style.opacity = 1;
-            profileImage.style.opacity = 1;
-            headerContent.style.transform = 'translateY(0)';
-            profileImage.style.transform = 'translateY(0)';
-        }
+    for (const s of sections) {
+      const top = s.offsetTop - (NAV_OFFSET + 100);
+      if (y >= top) current = s.id || '';
     }
-});
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href').slice(1) === current);
+    });
 
-// Scholar stats and publications functions
+    // Header fade
+    if (researchSection && headerContent && profileImage) {
+      const t = researchSection.getBoundingClientRect().top;
+      const h = window.innerHeight || 1;
+      const opacity = Math.max(0, Math.min(1, t / h));
+      const dy = (1 - opacity) * -50;
+      headerContent.style.opacity = opacity;
+      profileImage.style.opacity = opacity;
+      headerContent.style.transform = `translate3d(0, ${dy}px, 0)`;
+      profileImage.style.transform = `translate3d(0, ${dy}px, 0)`;
+    }
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(onScrollFrame);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+// === Scholar stats (0 citations gizle + no-store) ===
 async function updateScholarStats() {
-    try {
-        const response = await fetch('./assets/data/scholar_stats.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        document.getElementById('citation-count').textContent = data.citations;
-        document.getElementById('publication-count').textContent = data.publications;
-        document.getElementById('h-index').textContent = data.h_index;
-        document.getElementById('last-updated').textContent = data.last_updated;
-    } catch (error) {
-        console.error('Error fetching scholar stats:', error);
-    }
-}
-
-async function updatePublications() {
   try {
-    const response = await fetch('./assets/data/scholar_stats.json');
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const res = await fetch('./assets/data/scholar_stats.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d = await res.json();
 
-    const data = await response.json();
-    const publicationList = document.getElementById('recent-publications');
-    if (!publicationList) {
-      console.error('Publication list container not found!');
-      return;
+    // Citations 0 ise satırı gizle
+    const citationContainer =
+      document.getElementById('citation-count-container') ||
+      (document.getElementById('citation-count')?.parentElement ?? null);
+
+    if (citationContainer) {
+      const c = Number(d.citations);
+      if (!Number.isFinite(c) || c <= 0) {
+        citationContainer.style.display = 'none';
+      } else {
+        const el = document.getElementById('citation-count');
+        if (el) el.textContent = String(c);
+        citationContainer.style.display = '';
+      }
     }
 
-    publicationList.innerHTML = '';
+    const publication = document.getElementById('publication-count');
+    const hIndex = document.getElementById('h-index');
+    const lastUpdated = document.getElementById('last-updated');
 
-    if (data.recent_publications && data.recent_publications.length > 0) {
-      const recentPublications = data.recent_publications.slice(0, 3); // ilk 3
-      recentPublications.forEach((pub, index) => {
-        const pubDiv = document.createElement('div');
-        pubDiv.className = 'publication-item';
-        pubDiv.setAttribute('data-aos', 'fade-up');
-
-        pubDiv.innerHTML = `
-          <div class="publication-year">
-            Year: ${pub.year} — Citations: ${pub.citations_count ?? 0}
-          </div>
-          <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
-          <p class="Journal">${pub.citation || 'Citation not available'}</p>
-          <button class="abstract-toggle" onclick="toggleAbstract(${index})">Show Abstract</button>
-          <div class="abstract" id="abstract-${index}" style="display: none;">
-            ${pub.abstract || 'Abstract not available'}
-          </div>
-        `;
-
-        publicationList.appendChild(pubDiv);
-      });
-    }
-
-    // Yeni eklenen yayınlar için AOS animasyonlarını güncelle
-    if (window.AOS && typeof AOS.refresh === 'function') {
-      AOS.refresh();
-    }
-  } catch (error) {
-    console.error('Error updating publications:', error);
+    if (publication) publication.textContent = d.publications ?? '—';
+    if (hIndex) hIndex.textContent = d.h_index ?? '—';
+    if (lastUpdated) lastUpdated.textContent = d.last_updated ?? '—';
+  } catch (e) {
+    console.error('Error fetching scholar stats:', e);
   }
 }
 
+// === Güvenli element yardımcıları (XSS azaltma) ===
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function publicationItem(prefix, idx, pub) {
+  const item = el('div', 'publication-item');
+  item.setAttribute('data-aos', 'fade-up');
 
+  const cite = Number(pub.citations_count ?? 0);
+  const meta = el('div', 'publication-year',
+    `Year: ${pub.year}${cite > 0 ? ` — Citations: ${cite}` : ''}`);
+
+  const h3 = el('h3');
+  const a = document.createElement('a');
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.href = pub.url || '#';
+  a.textContent = pub.title || 'Untitled';
+  h3.appendChild(a);
+
+  const j = el('p', 'Journal', pub.citation || 'Citation not available');
+
+  const btn = el('button', 'abstract-toggle', 'Show Abstract');
+  const abs = el('div', 'abstract', pub.abstract || 'Abstract not available');
+  abs.id = `abstract-${prefix}-${idx}`;
+  abs.style.display = 'none';
+  btn.addEventListener('click', () => {
+    const hidden = abs.style.display === 'none';
+    abs.style.display = hidden ? 'block' : 'none';
+    btn.textContent = hidden ? 'Hide Abstract' : 'Show Abstract';
+  });
+
+  item.append(meta, h3, j, btn, abs);
+  return item;
+}
+
+// === Recent (prefix: r) ===
+async function updatePublications() {
+  try {
+    const wrap = document.getElementById('recent-publications');
+    if (!wrap) return;
+
+    const res = await fetch('./assets/data/scholar_stats.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    wrap.innerHTML = '';
+    (data.recent_publications || []).slice(0, 3).forEach((pub, i) => {
+      wrap.appendChild(publicationItem('r', i, pub));
+    });
+
+    if (window.AOS?.refresh) AOS.refresh();
+  } catch (e) {
+    console.error('Error updating publications:', e);
+  }
+}
+
+// === All (prefix: a) ===
 async function updatePublications_all() {
-    try {
-        const response = await fetch('./assets/data/scholar_stats.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const publicationList = document.getElementById('all-publications'); // Change to 'all-publications'
-        
-        if (!publicationList) {
-            console.error('Publication list container not found!');
-            return;
-        }
-        
-        publicationList.innerHTML = ''; // Clear previous content
-        
-        if (data.recent_publications && data.recent_publications.length > 0) {
-            // Remove the slice method to display all publications
-            data.recent_publications.forEach((pub, index) => {
-                const pubDiv = document.createElement('div');
-                pubDiv.className = 'publication-item';
-                pubDiv.setAttribute('data-aos', 'fade-up');
-                
-                pubDiv.innerHTML = `
-                <div class="publication-year">
-                    ${(() => {
-                    const cite = pub.citations_count ?? 0;
-                    return `Year: ${pub.year}` + (cite ? ` — Citations: ${cite}` : '');
-                    })()}
-                </div>
-                <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
-                <p class="Journal">${pub.citation || 'Citation not available'}</p>
-                <button class="abstract-toggle" onclick="toggleAbstract(${index})">
-                    Show Abstract
-                </button>
-                <div class="abstract" id="abstract-${index}" style="display: none;">
-                    ${pub.abstract || 'Abstract not available'}
-                </div>
-                `;
-                
-                publicationList.appendChild(pubDiv); // Append the new publication item
-            });
-        }
-    } catch (error) {
-        console.error('Error updating publications:', error);
-    }
-}
+  try {
+    const wrap = document.getElementById('all-publications');
+    if (!wrap) return;
 
+    const res = await fetch('./assets/data/scholar_stats.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
 
-
-function toggleAbstract(index) {
-    const abstractDiv = document.getElementById(`abstract-${index}`);
-    const button = abstractDiv.previousElementSibling;
-    
-    if (abstractDiv.style.display === 'none') {
-        abstractDiv.style.display = 'block';
-        button.textContent = 'Hide Abstract';
-    } else {
-        abstractDiv.style.display = 'none';
-        button.textContent = 'Show Abstract';
-    }
-}
-
-// Single DOMContentLoaded event listener for all initializations
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu functionality
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    const navLinksItems = document.querySelectorAll('.nav-links a');
-
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
-
-        navLinksItems.forEach(item => {
-            item.addEventListener('click', function() {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
-        });
-    }
-
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
-            hamburger.classList.remove('active');
-            navLinks.classList.remove('active');
-        }
+    wrap.innerHTML = '';
+    (data.recent_publications || []).forEach((pub, i) => {
+      wrap.appendChild(publicationItem('a', i, pub));
     });
 
-    // Smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const headerOffset = 100;
-                const elementPosition = target.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    if (window.AOS?.refresh) AOS.refresh();
+  } catch (e) {
+    console.error('Error updating publications:', e);
+  }
+}
 
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
+// === DOMContentLoaded ===
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  const navLinksItems = document.querySelectorAll('.nav-links a');
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
     });
+    navLinksItems.forEach(item => {
+      item.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+      }
+    });
+  }
 
-    // Update scholar stats and publications
-updateScholarStats();
-if (document.getElementById('recent-publications')) updatePublications();
-if (document.getElementById('all-publications')) updatePublications_all();
+  // Smooth scroll (dahili anchor)
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      const target = document.querySelector(anchor.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const headerOffset = 100;
+        const y = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Scholar init
+  updateScholarStats();
+  if (document.getElementById('recent-publications')) updatePublications();
+  if (document.getElementById('all-publications')) updatePublications_all();
 });
 
-// Optional: Add loading animation
-window.addEventListener('load', function() {
-    document.body.classList.add('loaded');
-});
-
-
+// === Load state ===
+window.addEventListener('load', () => document.body.classList.add('loaded'), { once: true });
