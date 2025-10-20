@@ -678,18 +678,3 @@ section {
     }
 }
 
-.publication-item {
-  margin-bottom: 1em;
-  line-height: 1.5;
-}
-.citation-count {
-  color: #555;
-  font-style: italic;
-  margin-left: 6px;
-}
-.pub-venue {
-  color: #777;
-  font-size: 0.9em;
-  margin-left: 1.2em;
-}
-
