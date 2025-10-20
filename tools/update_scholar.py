@@ -43,6 +43,7 @@ def update_scholar_stats():
                 'title': filled_pub['bib']['title'],
                 'year': filled_pub['bib'].get('pub_year', 'Year Unknown'),
                 'citation': filled_pub['bib'].get('citation', 'Citation not available'),
+                'citations_count': filled_pub.get('num_citations', 0),  # 🔹 atıf sayısı
                 'abstract': abstract,
                 'url': filled_pub.get('pub_url', '#'),
                 'authors': filled_pub['bib'].get('author', [])
