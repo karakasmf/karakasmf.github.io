@@ -175,32 +175,48 @@
 
 
 <script>
-    async function updateScholarStats() {
-        try {
-            console.log('Attempting to fetch scholar stats...');
-            const response = await fetch('/assets/data/scholar_stats.json');
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            console.log('Fetched scholar stats:', data);
-            
-            // Update your HTML elements
-            document.getElementById('citation-count').textContent = data.citations;
-            document.getElementById('publication-count').textContent = data.publications;
-            document.getElementById('h-index').textContent = data.h_index;
-            document.getElementById('last-updated').textContent = data.last_updated;
-            
-            console.log('Updated DOM elements successfully');
-        } catch (error) {
-            console.error('Error fetching scholar stats:', error);
+async function updateScholarStats() {
+    try {
+        console.log('Attempting to fetch scholar stats...');
+        const response = await fetch('/assets/data/scholar_stats.json');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+        console.log('Fetched scholar stats:', data);
+
+        // Genel istatistikleri güncelle
+        document.getElementById('citation-count').textContent = data.citations;
+        document.getElementById('publication-count').textContent = data.publications;
+        document.getElementById('h-index').textContent = data.h_index;
+        document.getElementById('last-updated').textContent = data.last_updated;
+
+        // Yayınları listele (citations_count dahil)
+        const container = document.getElementById('recent-publications');
+        container.innerHTML = '';
+
+        if (data.recent_publications && data.recent_publications.length > 0) {
+            data.recent_publications.slice(0, 8).forEach(pub => {
+                const div = document.createElement('div');
+                div.className = 'publication-item';
+                div.innerHTML = `
+                    <b><a href="${pub.url}" target="_blank">${pub.title}</a></b>
+                    <span>(${pub.year})</span>
+                    <span class="citation-count"> — Citations: ${pub.citations_count ?? 0}</span>
+                    <div class="pub-venue">${pub.citation || ''}</div>
+                `;
+                container.appendChild(div);
+            });
+        } else {
+            container.innerHTML = '<p>No publication data available.</p>';
         }
+
+        console.log('Updated DOM elements successfully');
+    } catch (error) {
+        console.error('Error fetching scholar stats:', error);
     }
-    
-    // Call when page loads
-    document.addEventListener('DOMContentLoaded', updateScholarStats);
-    </script>
+}
+
+document.addEventListener('DOMContentLoaded', updateScholarStats);
+</script>
 </body>
 </html>
