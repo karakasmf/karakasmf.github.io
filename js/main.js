@@ -117,7 +117,9 @@ async function updatePublications() {
                 pubDiv.setAttribute('data-aos', 'fade-up');
                 
                 pubDiv.innerHTML = `
-                    <div class="publication-year">${pub.year}</div>
+                    <div class="publication-year">
+                    Year: ${pub.year} — Citations: ${pub.citations_count ?? 0}
+                    </div>
                     <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
                     <p class="Journal">${pub.citation || 'Citation not available'}</p>
                     <button class="abstract-toggle" onclick="toggleAbstract(${index})">
