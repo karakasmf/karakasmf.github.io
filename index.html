@@ -71,7 +71,7 @@
                     <a href="#contact" class="cv-button">Get in Touch</a>
                 </div>
                 <div class="profile-image-container" data-aos="fade-left">
-                    <img src="images\profile.jpg" alt="descriptor" class="profile-image">
+                    <img src="images/profile.jpg" alt="descriptor" class="profile-image">
                 </div>
             </div>
         </div>
@@ -123,32 +123,35 @@
     </section>
 
     <section id="publications">
-        <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Recent Publications</h2>
-            <div class="scholar-stats">
-                <div class="stat-box">
-                    <h3>Citations</h3>
-                    <b><p id="citation-count">Loading...</p></b>
-                </div>
-                <div class="stat-box">
-                    <h3>Publications</h3>
-                    <b><p id="publication-count">Loading...</p></b>
-                </div>
-                <div class="stat-box">
-                    <h3>H-Index</h3>
-                    <b><p id="h-index">Loading...</p></b>
-                </div>
-                <p class="update-time">Data sourced from Google Scholar. Last updated: <span id="last-updated">Loading...</span></p>
-            </div>
-            <div class="publication-list" id="recent-publications">
-                <!-- Publications will be inserted here by JavaScript -->
-            </div>
-            </div>
-            <center><a href="https://scholar.google.com.tr/citations?hl=tr&user=GMQ2DnkAAAAJ" class="cv-button" target="_blank">Google Scholar</a>
-                <a href="curriculum_vitae.html#publications" class="cv-button">All Publications</a></center>
-           
-        </div>
-    </section>
+  <div class="container">
+    <h2 class="section-title" data-aos="fade-up">Recent Publications</h2>
+    <div class="scholar-stats">
+      <div class="stat-box">
+        <h3>Citations</h3>
+        <b><p id="citation-count">Loading...</p></b>
+      </div>
+      <div class="stat-box">
+        <h3>Publications</h3>
+        <b><p id="publication-count">Loading...</p></b>
+      </div>
+      <div class="stat-box">
+        <h3>H-Index</h3>
+        <b><p id="h-index">Loading...</p></b>
+      </div>
+      <p class="update-time">
+        Data sourced from Google Scholar. Last updated: <span id="last-updated">Loading...</span>
+      </p>
+    </div>
+
+    <div class="publication-list" id="recent-publications"></div>
+
+    <div class="pub-actions" style="text-align:center; margin-top:12px;">
+      <a href="https://scholar.google.com.tr/citations?hl=tr&user=GMQ2DnkAAAAJ" class="cv-button" target="_blank">Google Scholar</a>
+      <a href="curriculum_vitae.html#publications" class="cv-button">All Publications</a>
+    </div>
+  </div>
+</section>
+
 
     <section id="contact" class="contact-section">
         <div class="container">
@@ -169,53 +172,5 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="js/main.js"></script>
-
-
-
-
-
-<script>
-async function updateScholarStats() {
-    try {
-        console.log('Attempting to fetch scholar stats...');
-        const response = await fetch('/assets/data/scholar_stats.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-        const data = await response.json();
-        console.log('Fetched scholar stats:', data);
-
-        // Üstteki genel sayılar
-        document.getElementById('citation-count').textContent = data.citations;
-        document.getElementById('publication-count').textContent = data.publications;
-        document.getElementById('h-index').textContent = data.h_index;
-        document.getElementById('last-updated').textContent = data.last_updated;
-
-        // Yayın listesi
-        const container = document.getElementById('recent-publications');
-        container.innerHTML = '';
-
-        if (data.recent_publications && data.recent_publications.length > 0) {
-            data.recent_publications.slice(0, 8).forEach(pub => {
-                const div = document.createElement('div');
-                div.className = 'publication-item';
-                div.innerHTML = `
-                    <b><a href="${pub.url}" target="_blank">${pub.title}</a></b><br>
-                    <span class="pub-meta">Year: ${pub.year} — Citations: ${pub.citations_count ?? 0}</span><br>
-                    <span class="pub-venue">${pub.citation || ''}</span>
-                `;
-                container.appendChild(div);
-            });
-        } else {
-            container.innerHTML = '<p>No publication data available.</p>';
-        }
-
-        console.log('Updated DOM elements successfully');
-    } catch (error) {
-        console.error('Error fetching scholar stats:', error);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', updateScholarStats);
-</script>
 </body>
 </html>

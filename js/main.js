@@ -91,52 +91,51 @@ async function updateScholarStats() {
 }
 
 async function updatePublications() {
-    try {
-        const response = await fetch('./assets/data/scholar_stats.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const publicationList = document.getElementById('recent-publications');
-        
-        if (!publicationList) {
-            console.error('Publication list container not found!');
-            return;
-        }
-        
-        publicationList.innerHTML = '';
-        
-        if (data.recent_publications && data.recent_publications.length > 0) {
-            // Use slice to get the first three publications
-            const recentPublications = data.recent_publications.slice(0, 3);
-            
-            recentPublications.forEach((pub, index) => {
-                const pubDiv = document.createElement('div');
-                pubDiv.className = 'publication-item';
-                pubDiv.setAttribute('data-aos', 'fade-up');
-                
-                pubDiv.innerHTML = `
-                    <div class="publication-year">
-                    Year: ${pub.year} — Citations: ${pub.citations_count ?? 0}
-                    </div>
-                    <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
-                    <p class="Journal">${pub.citation || 'Citation not available'}</p>
-                    <button class="abstract-toggle" onclick="toggleAbstract(${index})">
-                        Show Abstract
-                    </button>
-                    <div class="abstract" id="abstract-${index}" style="display: none;">
-                        ${pub.abstract || 'Abstract not available'}
-                    </div>
-                `;
-                
-                publicationList.appendChild(pubDiv);
-            });
-        }
-    } catch (error) {
-        console.error('Error updating publications:', error);
+  try {
+    const response = await fetch('./assets/data/scholar_stats.json');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const data = await response.json();
+    const publicationList = document.getElementById('recent-publications');
+    if (!publicationList) {
+      console.error('Publication list container not found!');
+      return;
     }
+
+    publicationList.innerHTML = '';
+
+    if (data.recent_publications && data.recent_publications.length > 0) {
+      const recentPublications = data.recent_publications.slice(0, 3); // ilk 3
+      recentPublications.forEach((pub, index) => {
+        const pubDiv = document.createElement('div');
+        pubDiv.className = 'publication-item';
+        pubDiv.setAttribute('data-aos', 'fade-up');
+
+        pubDiv.innerHTML = `
+          <div class="publication-year">
+            Year: ${pub.year} — Citations: ${pub.citations_count ?? 0}
+          </div>
+          <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
+          <p class="Journal">${pub.citation || 'Citation not available'}</p>
+          <button class="abstract-toggle" onclick="toggleAbstract(${index})">Show Abstract</button>
+          <div class="abstract" id="abstract-${index}" style="display: none;">
+            ${pub.abstract || 'Abstract not available'}
+          </div>
+        `;
+
+        publicationList.appendChild(pubDiv);
+      });
+    }
+
+    // Yeni eklenen yayınlar için AOS animasyonlarını güncelle
+    if (window.AOS && typeof AOS.refresh === 'function') {
+      AOS.refresh();
+    }
+  } catch (error) {
+    console.error('Error updating publications:', error);
+  }
 }
+
 
 async function updatePublications_all() {
     try {
@@ -163,15 +162,20 @@ async function updatePublications_all() {
                 pubDiv.setAttribute('data-aos', 'fade-up');
                 
                 pubDiv.innerHTML = `
-                    <div class="publication-year">${pub.year}</div>
-                    <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
-                    <p class="Journal">${pub.citation || 'Citation not available'}</p>
-                    <button class="abstract-toggle" onclick="toggleAbstract(${index})">
-                        Show Abstract
-                    </button>
-                    <div class="abstract" id="abstract-${index}" style="display: none;">
-                        ${pub.abstract || 'Abstract not available'}
-                    </div>
+                <div class="publication-year">
+                    ${(() => {
+                    const cite = pub.citations_count ?? 0;
+                    return `Year: ${pub.year}` + (cite ? ` — Citations: ${cite}` : '');
+                    })()}
+                </div>
+                <h3><a href="${pub.url}" target="_blank">${pub.title}</a></h3>
+                <p class="Journal">${pub.citation || 'Citation not available'}</p>
+                <button class="abstract-toggle" onclick="toggleAbstract(${index})">
+                    Show Abstract
+                </button>
+                <div class="abstract" id="abstract-${index}" style="display: none;">
+                    ${pub.abstract || 'Abstract not available'}
+                </div>
                 `;
                 
                 publicationList.appendChild(pubDiv); // Append the new publication item
@@ -246,8 +250,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Update scholar stats and publications
-    updateScholarStats();
-    updatePublications();
+updateScholarStats();
+if (document.getElementById('recent-publications')) updatePublications();
+if (document.getElementById('all-publications')) updatePublications_all();
 });
 
 // Optional: Add loading animation

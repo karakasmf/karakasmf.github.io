@@ -678,3 +678,21 @@ section {
     }
 }
 
+.publication-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+.publication-year {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+.Journal { color: #4b5563; margin: 2px 0 10px; }
+.abstract { margin-top: 10px; }
+.abstract-toggle {
+  border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 600; cursor: pointer;
+}
+
