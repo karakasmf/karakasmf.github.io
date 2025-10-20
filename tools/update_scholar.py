@@ -1,35 +1,14 @@
 #!/usr/bin/env python3
-from scholarly import scholarly, ProxyGenerator
-from tenacity import retry, wait_exponential, stop_after_attempt
-import json
+import os, sys, json, time, argparse
 from datetime import datetime
-import os
-import sys
-import time
-import argparse
-
-def setup_proxy():
-    pg = ProxyGenerator()
-    serp = os.environ.get("SERPAPI_API_KEY", "").strip()
-    if serp:
-        if pg.SerpAPI(serp):
-            scholarly.use_proxy(pg)
-            print("Proxy: SerpAPI aktif.")
-            return
-        else:
-            print("UYARI: SerpAPI kurulamadı, FreeProxies denenecek...")
-    try:
-        if pg.FreeProxies():
-            scholarly.use_proxy(pg)
-            print("Proxy: FreeProxies aktif.")
-            return
-    except Exception as e:
-        print(f"UYARI: FreeProxies kurulamadı: {e}")
-    print("Proxy: Yok (istekler engellenebilir).")
+from scholarly import scholarly
+from tenacity import retry, wait_exponential, stop_after_attempt
 
 def _safe_int(x, default=0):
-    try: return int(x)
-    except Exception: return default
+    try:
+        return int(x)
+    except Exception:
+        return default
 
 def _extract_url(fp):
     return (
@@ -39,7 +18,6 @@ def _extract_url(fp):
         or fp.get("pub_url_arxiv")
         or fp.get("pub_url_scholar")
         or fp.get("url_scholarbib")
-        or fp.get("citedby_url")
         or "#"
     )
 
@@ -54,20 +32,20 @@ def _fill_pub(pub):
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--max", type=int, default=150, help="İşlenecek maksimum yayın sayısı.")
+    p.add_argument("--max", type=int, default=120, help="İşlenecek maksimum yayın sayısı.")
     p.add_argument("--out", type=str, default="assets/data/scholar_stats.json", help="JSON çıktı yolu.")
     p.add_argument("--quiet", action="store_true", help="Sessiz çıktı.")
     return p.parse_args()
 
 def main():
     args = parse_args()
+
     scholar_id = os.environ.get("SCHOLAR_ID")
     if not scholar_id:
         print("HATA: SCHOLAR_ID environment değişkeni tanımlı değil.", file=sys.stderr)
         sys.exit(1)
 
     print("Scholar ID alındı (maskelenmiş).")
-    setup_proxy()
 
     try:
         author = _fetch_author_filled(scholar_id)
@@ -101,7 +79,7 @@ def main():
                 "title": bib.get("title", "N/A"),
                 "year": bib.get("pub_year", "Year Unknown"),
                 "citation": bib.get("citation", "Citation not available"),
-                "citations_count": fp.get("num_citations", 0),  # <- atıf sayısı
+                "citations_count": fp.get("num_citations', 0) if False else fp.get("num_citations", 0),
                 "abstract": abstract,
                 "url": _extract_url(fp),
                 "authors": bib.get("author", []),
@@ -109,7 +87,7 @@ def main():
             if not args.quiet:
                 print(f"- [{i+1}] {pub_data['title']} ({pub_data['year']}) — citations={pub_data['citations_count']}")
             stats["recent_publications"].append(pub_data)
-            time.sleep(0.5)  # rate-limit'e saygı
+            time.sleep(0.6)  # nazik gecikme (rate-limit'e karşı)
         except Exception as e:
             print(f"[WARN] Yayın işlenemedi: {e}")
 
