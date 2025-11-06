@@ -4,11 +4,17 @@ from datetime import datetime
 from scholarly import scholarly
 from tenacity import retry, wait_exponential, stop_after_attempt
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 def _safe_int(x, default=0):
     try:
         return int(x)
     except Exception:
         return default
+
 
 def _extract_url(fp):
     return (
@@ -21,21 +27,40 @@ def _extract_url(fp):
         or "#"
     )
 
-@retry(wait=wait_exponential(multiplier=1, max=60), stop=stop_after_attempt(6), reraise=True)
+
+@retry(
+    wait=wait_exponential(multiplier=1, max=60),
+    stop=stop_after_attempt(6),
+    reraise=True,
+)
 def _fetch_author_filled(scholar_id: str):
     a = scholarly.search_author_id(scholar_id)
     return scholarly.fill(a)
 
-@retry(wait=wait_exponential(multiplier=1, max=30), stop=stop_after_attempt(5), reraise=True)
+
+@retry(
+    wait=wait_exponential(multiplier=1, max=30),
+    stop=stop_after_attempt(5),
+    reraise=True,
+)
 def _fill_pub(pub):
     return scholarly.fill(pub)
 
+
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--max", type=int, default=120, help="İşlenecek maksimum yayın sayısı.")
-    p.add_argument("--out", type=str, default="assets/data/scholar_stats.json", help="JSON çıktı yolu.")
+    p.add_argument(
+        "--max", type=int, default=120, help="İşlenecek maksimum yayın sayısı."
+    )
+    p.add_argument(
+        "--out",
+        type=str,
+        default="assets/data/scholar_stats.json",
+        help="JSON çıktı yolu.",
+    )
     p.add_argument("--quiet", action="store_true", help="Sessiz çıktı.")
     return p.parse_args()
+
 
 def main():
     args = parse_args()
@@ -54,8 +79,10 @@ def main():
         sys.exit(1)
 
     pubs_all = author.get("publications", [])
-    pubs_all.sort(key=lambda x: _safe_int(x.get("bib", {}).get("pub_year", 0)), reverse=True)
-    pubs = pubs_all[:args.max] if args.max and args.max > 0 else pubs_all
+    pubs_all.sort(
+        key=lambda x: _safe_int(x.get("bib", {}).get("pub_year", 0)), reverse=True
+    )
+    pubs = pubs_all[: args.max] if args.max and args.max > 0 else pubs_all
 
     stats = {
         "citations": author.get("citedby", 0),
@@ -85,7 +112,9 @@ def main():
                 "authors": bib.get("author", []),
             }
             if not args.quiet:
-                print(f"- [{i+1}] {pub_data['title']} ({pub_data['year']}) — citations={pub_data['citations_count']}")
+                print(
+                    f"- [{i + 1}] {pub_data['title']} ({pub_data['year']}) — citations={pub_data['citations_count']}"
+                )
             stats["recent_publications"].append(pub_data)
             time.sleep(0.6)  # nazik gecikme (rate-limit'e karşı)
         except Exception as e:
@@ -96,6 +125,7 @@ def main():
         json.dump(stats, f, ensure_ascii=False, indent=2)
 
     print(f"\nSuccessfully updated scholar stats → {args.out}")
+
 
 if __name__ == "__main__":
     main()
