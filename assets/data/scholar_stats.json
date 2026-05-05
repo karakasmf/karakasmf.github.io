@@ -1,9 +1,18 @@
 {
   "citations": 35,
   "h_index": 3,
-  "publications": 12,
-  "last_updated": "2026-04-23 20:45:01",
+  "publications": 13,
+  "last_updated": "2026-05-05 09:19:24",
   "recent_publications": [
+    {
+      "title": "Subject-Independent Alzheimer’s Disease Classification From EEG Signals Using A Pretrained Foundation Model With Learnable Channel-To-Channel Attention",
+      "year": 2026,
+      "citation": "Enginoscope, 1-16, 2026",
+      "citations_count": 0,
+      "abstract": "Abstract not available",
+      "url": "#",
+      "authors": "Mehmet Fatih Karakaş"
+    },
     {
       "title": "DECODING BRAIN SIGNALS FOR INNER SPEECH: EEG SIGNAL SUB-BAND DECOMPOSITION AND MACHINE LEARNING APPROACH",
       "year": 2026,
