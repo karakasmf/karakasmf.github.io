@@ -1,9 +1,18 @@
 {
-  "citations": 37,
+  "citations": 38,
   "h_index": 3,
-  "publications": 12,
-  "last_updated": "2026-06-15 08:05:55",
+  "publications": 13,
+  "last_updated": "2026-07-11 23:33:14",
   "recent_publications": [
+    {
+      "title": "Comparative Evaluation of Modern YOLO Architectures for Automated Periapical Lesion Detection: Unveiling the Data Augmentation Paradox",
+      "year": 2026,
+      "citation": "15th International Congress on Current Developments in Science, Technology …, 2026",
+      "citations_count": 0,
+      "abstract": "Abstract not available",
+      "url": "#",
+      "authors": "Mehmet Fatih Karakaş and Betül Karakaş"
+    },
     {
       "title": "Subject-Independent Alzheimer’s Disease Classification From EEG Signals Using A Pretrained Foundation Model With Learnable Channel-To-Channel Attention",
       "year": 2026,
@@ -26,7 +35,7 @@
       "title": "Metaheuristic-driven multi objective FIR filter design for ECG denoising",
       "year": 2025,
       "citation": "International Journal of Advances in Signal and Image Sciences 11 (1), 153-168, 2025",
-      "citations_count": 2,
+      "citations_count": 3,
       "abstract": "Digital signal processing in biomedical applications requires advanced filtering techniques that can simultaneously optimize multiple performance criteria. This study introduces a novel multi-objective metaheuristic approach for Finite Impulse Response (FIR) filter design, addressing the complex challenges of signal processing optimization. The research employs advanced metaheuristic algorithms, including Particle Swarm Optimization (PSO), Artificial Bee Colony (ABC), Genetic Algorithm (GA), Black Widow Optimization (BWO), Chaos Game Optimization (CGO), Harmony Search (HS), Squirrel Search Algorithm (SSA), and Atomic Orbital Search (AOS) to optimize multiple filter design parameters jointly. In contrast to conventional approaches, the proposed multi-objective optimization strategy demonstrates superior performance in signal filtering. The proposed method considers the important design trade-offs at the same time, such as minimizing signal power after stopband frequency, reducing stopband ripple, maximizing stopband first lobe and stopband edge frequency attenuation, and reducing computational complexity. The method is employed on ElectroCardioGram (ECG) signals from the MIT-BIH open-access database. Performance comparison indicated that multi-objective metaheuristic filters achieved much better performance than conventional FIR filters. The optimized filters exhibited improved stopband attenuation, narrower transition bands, lower power leakage, and more efficient signal processing at a cut-off frequency of 100 Hz. Signal power measurements demonstrated significant improvements. While conventional FIR filters …",
       "url": "http://www.xlescience.org/index.php/IJASIS/article/view/275",
       "authors": "Mehmet Fatih Karakaş and Fatma Latifoğlu"
@@ -64,7 +73,7 @@
       "citation": "The European Journal of Research and Development 3 (3), 14-30, 2023",
       "citations_count": 2,
       "abstract": "The design approach presented in this paper uses a new metaheuristic method Chaos Game Optimization (CGO) to design a 2-channel quadrature mirror filter (QMF) banks. For this study, finite impulse response (FIR) low-pass prototype filter coefficients are optimized to minimize the cost function. The cost function is formulated as the sum of four terms: the square sum of the errors between this estimated frequency response and the ideal filter response, passband ripple, stopband ripple, and stopband edge frequency error. These parameters are important components of FIR filter prototype design that are often used alone in many studies. To obtain a QMF bank prototype filter, prototype filter modulated with an appropriate complex exponential signal. The produced design results of the proposed method like performance parameters, frequency responses of prototype filters and QMF bank results are presented and compared with earlier reported results. The results show that the presented study has significant improvement in the performance parameters of QMF banks and prototype filter.",
-      "url": "https://www.orclever.com/uploads/articles/ejrndv3i3274.pdf",
+      "url": "https://journals.orclever.com/ejrnd/article/view/274",
       "authors": "Mehmet Fatih Karakaş and Fatma Latifoğlu"
     },
     {
