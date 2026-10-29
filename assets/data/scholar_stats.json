@@ -1,9 +1,18 @@
 {
-  "citations": 51,
+  "citations": 53,
   "h_index": 4,
-  "publications": 16,
-  "last_updated": "2026-08-27 14:33:46",
+  "publications": 17,
+  "last_updated": "2026-10-29 19:19:54",
   "recent_publications": [
+    {
+      "title": "Comparative Analysis of YOLO26-Based Detection Strategies for Periapical Lesion Detection on Panoramic Dental Radiographs: Single-Model, Hybrid, and Ensemble Approaches",
+      "year": 2026,
+      "citation": "2026 10th International Artificial Intelligence and Data Processing …, 2026",
+      "citations_count": 0,
+      "abstract": "Abstract not available",
+      "url": "#",
+      "authors": "Mehmet Fatih Karakaş and Betül Karakaş"
+    },
     {
       "title": "Comparative Evaluation of Modern YOLO Architectures for Automated Periapical Lesion Detection: Unveiling the Data Augmentation Paradox",
       "year": 2026,
@@ -71,7 +80,7 @@
       "title": "Distinguishing Parkinson’s disease with GLCM features from the hankelization of EEG signals",
       "year": 2023,
       "citation": "Diagnostics 13 (10), 1769, 2023",
-      "citations_count": 23,
+      "citations_count": 24,
       "abstract": "This study proposes a novel method that uses electroencephalography (EEG) signals to classify Parkinson’s Disease (PD) and demographically matched healthy control groups. The method utilizes the reduced beta activity and amplitude decrease in EEG signals that are associated with PD. The study involved 61 PD patients and 61 demographically matched controls groups, and EEG signals were recorded in various conditions (eyes closed, eyes open, eyes both open and closed, on-drug, off-drug) from three publicly available EEG data sources (New Mexico, Iowa, and Turku). The preprocessed EEG signals were classified using features obtained from gray-level co-occurrence matrix (GLCM) features through the Hankelization of EEG signals. The performance of classifiers with these novel features was evaluated using extensive cross-validations (CV) and leave-one-out cross-validation (LOOCV) schemes. This method under 10 × 10 fold CV, the method was able to differentiate PD groups from healthy control groups using a support vector machine (SVM) with an accuracy of 92.4 ± 0.01, 85.7 ± 0.02, and 77.1 ± 0.06 for New Mexico, Iowa, and Turku datasets, respectively. After a head-to-head comparison with state-of-the-art methods, this study showed an increase in the classification of PD and controls.",
       "url": "https://www.mdpi.com/2075-4418/13/10/1769",
       "authors": "Mehmet Fatih Karakaş and Fatma Latifoğlu"
@@ -143,7 +152,7 @@
       "title": "Performans Denetimi: Tanımı, Unsurları, Performans Denetimi İle Düzenlilik Denetiminin Karşılaştırılması ve Performans Denetimine Duyulan İhtiyaç",
       "year": 2004,
       "citation": "Vergi Sorunları Dergisi 184, 2004",
-      "citations_count": 6,
+      "citations_count": 7,
       "abstract": "Abstract not available",
       "url": "https://scholar.google.com/scholar?cluster=2109283555397410667&hl=en&oi=scholarr",
       "authors": "Mehmet Karakaş"
